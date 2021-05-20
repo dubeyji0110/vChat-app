@@ -5,14 +5,15 @@
   "author": "Devansh Dubey",
   "license": "MIT",
   "scripts": {
-    "start" : "node index.js",
+    "start": "node index.js",
     "devStart": "nodemon index.js"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "ejs": "^3.1.6",
     "express": "^4.17.1",
     "peer": "^0.6.1",
-    "socket.io": "^4.1.2",
+    "socket.io": "3.0.4",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

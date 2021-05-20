@@ -1,4 +1,4 @@
-const socket = io("/");
+const socket = io();
 const videoGrid = document.querySelector("#video-grid");
 const myVideo = document.createElement("video");
 const showChat = document.querySelector("#showChat");
@@ -20,17 +20,15 @@ showChat.addEventListener("click", () => {
 	document.querySelector(".header__back").style.display = "block";
 });
 
-while (true) {
-	const user = prompt("Enter your name: ");
-	if (user) {
-		break;
-	}
+let user = prompt("Enter Your Username: ");
+while (!user) {
+	user = prompt("Username is required!: ");
 }
 
 let peer = new Peer(undefined, {
 	path: "/peerjs",
 	host: "/",
-	port: "443",
+	port: 3000,
 });
 
 let myVideoStream;
@@ -78,21 +76,23 @@ const addVideoStream = (video, stream) => {
 };
 
 let text = document.querySelector("#chat_message");
-let send = document.getElementById("send");
+let form = document.querySelector("#form");
 let messages = document.querySelector(".messages");
 
-send.addEventListener("click", (e) => {
+form.addEventListener("submit", (e) => {
+	e.preventDefault();
 	if (text.value.length !== 0) {
-		socket.emit("message", text.value);
+		createMsg(text.value, "Me");
+		socket.emit("send", text.value);
 		text.value = "";
 	}
 });
 
-text.addEventListener("keydown", (e) => {
-	if (e.key === "Enter" && text.value.length !== 0) {
-		socket.emit("message", text.value);
-		text.value = "";
-	}
+socket.on("receive", (msg, userName) => {
+	createMsg(msg, userName);
+});
+socket.on("left", (userName) => {
+	createMsg("LEFT", userName);
 });
 
 const inviteButton = document.querySelector("#inviteButton");
@@ -135,13 +135,22 @@ inviteButton.addEventListener("click", (e) => {
 	);
 });
 
-socket.on("createMessage", (message, userName) => {
+// socket.on("createMessage", (message, userName) => {
+// 	messages.innerHTML =
+// 		messages.innerHTML +
+// 		`<div class="message">
+//         <b><i class="far fa-user-circle"></i> <span> ${
+// 			userName === user ? "me" : userName
+// 		}</span> </b>
+//         <span>${message}</span>
+//     </div>`;
+// });
+
+const createMsg = (msg, userName) => {
 	messages.innerHTML =
 		messages.innerHTML +
 		`<div class="message">
-        <b><i class="far fa-user-circle"></i> <span> ${
-			userName === user ? "me" : userName
-		}</span> </b>
-        <span>${message}</span>
+        <b><i class="far fa-user-circle"></i> <span> ${userName}</span> </b>
+        <span>${msg}</span>
     </div>`;
-});
+};
