@@ -1,4 +1,4 @@
-const socket = io();
+const socket = io().connect("/");
 const videoGrid = document.querySelector("#video-grid");
 const myVideo = document.createElement("video");
 const showChat = document.querySelector("#showChat");
@@ -90,9 +90,6 @@ form.addEventListener("submit", (e) => {
 
 socket.on("receive", (msg, userName) => {
 	createMsg(msg, userName);
-});
-socket.on("left", (userName) => {
-	createMsg("LEFT", userName);
 });
 
 const inviteButton = document.querySelector("#inviteButton");

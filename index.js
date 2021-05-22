@@ -40,7 +40,6 @@ io.on("connection", (socket) => {
 			socket.to(roomId).broadcast.emit("receive", message, userName);
 		});
 		socket.on("disconnect", (message) => {
-			socket.to(roomId).broadcast.emit("left", userName);
 			delete users[socket.id];
 		});
 	});
