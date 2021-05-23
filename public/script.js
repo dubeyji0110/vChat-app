@@ -28,7 +28,7 @@ while (!user) {
 let peer = new Peer(undefined, {
 	path: "/peerjs",
 	host: "/",
-	port: 3000,
+	port: PORT || 3000,
 });
 
 let myVideoStream;

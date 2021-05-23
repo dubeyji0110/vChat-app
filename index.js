@@ -11,6 +11,7 @@ const io = require("socket.io")(server, {
 });
 const peerServer = ExpressPeerServer(server, {
 	debug: true,
+	port: 443
 });
 
 app.set("view engine", "ejs");
@@ -26,7 +27,7 @@ app.get("/join", (req, res) => {
 });
 
 app.get("/room/:roomId", (req, res) => {
-	res.render("room", { roomId: req.params.roomId });
+	res.render("room", { roomId: req.params.roomId, PORT: process.env.PORT });
 });
 
 const users = {};
