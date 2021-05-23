@@ -11,8 +11,10 @@ const io = require("socket.io")(server, {
 });
 const peerServer = ExpressPeerServer(server, {
 	debug: true,
-	port: 443
+	port: 443,
 });
+
+const PORT = process.env.NODE_ENV === "production" ? 443 : 3000;
 
 app.set("view engine", "ejs");
 app.use("/peerjs", peerServer);
@@ -27,7 +29,7 @@ app.get("/join", (req, res) => {
 });
 
 app.get("/room/:roomId", (req, res) => {
-	res.render("room", { roomId: req.params.roomId, PORT: process.env.PORT });
+	res.render("room", { roomId: req.params.roomId, PORT });
 });
 
 const users = {};
