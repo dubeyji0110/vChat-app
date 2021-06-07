@@ -4,6 +4,7 @@ const myVideo = document.createElement("video");
 const showChat = document.querySelector("#showChat");
 const backBtn = document.querySelector(".header__back");
 
+const peers = {};
 myVideo.muted = true;
 
 backBtn.addEventListener("click", () => {
@@ -53,6 +54,11 @@ navigator.mediaDevices
 		socket.on("user-connected", (userId) => {
 			connectNewUser(userId, stream);
 		});
+
+		socket.on("user-disconnected", (userId) => {
+			peers[userId].close();
+			delete peers[userId];
+		});
 	});
 
 const connectNewUser = (userId, stream) => {
@@ -61,6 +67,7 @@ const connectNewUser = (userId, stream) => {
 	call.on("stream", (userVideoStream) => {
 		addVideoStream(video, userVideoStream);
 	});
+	peers[userId] = call;
 };
 
 peer.on("open", (id) => {
